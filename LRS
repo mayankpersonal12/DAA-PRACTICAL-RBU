@@ -1,0 +1,52 @@
+LRS CODE=========
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        char[] x = text1.toCharArray();
+        char[] y = text2.toCharArray();
+        int xl = text1.length();
+        int yl = text2.length();
+        int cost[][] = new int[xl + 1][yl + 1];
+        char dir[][] = new char[xl + 1][yl + 1];
+       
+        for (int i = 0; i <= xl; i++) {
+            cost[i][0] = 0;
+            dir[i][0] = 'H';
+        }
+        for (int j = 0; j <= yl; j++) {
+            cost[0][j] = 0;
+            dir[0][j] = 'H';
+        }
+        for (int i = 1; i <= xl; i++) {
+            for (int j = 1; j <= yl; j++) {
+                if (x[i - 1] != y[j - 1]) {
+                    if (cost[i - 1][j] >= cost[i][j - 1]) {
+                        cost[i][j] = cost[i - 1][j];
+                        dir[i][j] = 'u';
+                    } else {
+                        cost[i][j] = cost[i][j - 1];
+                        dir[i][j] = 's';
+                    }
+                } else {
+                    cost[i][j] = cost[i - 1][j - 1] + 1;
+                    dir[i][j] = 'd';
+                }
+            }
+        }
+       
+        return back(xl, yl, cost, dir);
+    }
+   
+    public int back(int i, int j, int[][] cost, char[][] dir) {
+        if (i == 0 || j == 0) {
+            return 0;
+        }
+        if (dir[i][j] == 'd') {
+            return 1 + back(i - 1, j - 1, cost, dir);
+        } else if (dir[i][j] == 'u') {
+            return back(i - 1, j, cost, dir);
+        } else {
+            return back(i, j - 1, cost, dir);
+        }
+    }
+}
