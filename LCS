@@ -1,0 +1,85 @@
+LCS CODE====
+
+public class lcs {
+    public int calculation(char[] x, char[] y) {
+        int xl = x.length;
+        int yl = y.length;
+        int cost[][] = new int[xl + 1][yl + 1];
+        char dir[][] = new char[xl + 1][yl + 1];
+
+        for (int i = 0; i <= xl; i++) {
+            cost[i][0] = 0;
+            dir[i][0] = 'H';
+        }
+        for (int j = 0; j <= yl; j++) {
+            cost[0][j] = 0;
+            dir[0][j] = 'H';
+        }
+
+        for (int i = 1; i <= xl; i++) {
+            for (int j = 1; j <= yl; j++) {
+                if (x[i - 1] != y[j - 1]) {
+                    if (cost[i - 1][j] >= cost[i][j - 1]) {
+                        cost[i][j] = cost[i - 1][j];
+                        dir[i][j] = 'u';
+                    } else {
+                        cost[i][j] = cost[i][j - 1];
+                        dir[i][j] = 's';
+                    }
+                } else {
+                    cost[i][j] = cost[i - 1][j - 1] + 1;
+                    dir[i][j] = 'd';
+                }
+            }
+        }
+        for(int i=0;i<xl;i++)
+        {
+            for(int j=0;j<yl;j++)
+            {
+                System.out.printf(cost[i][j]+"\t");
+            }
+            System.out.printf("\n");
+        }
+        System.out.println("\n");
+        for(int i=0;i<xl;i++)
+        {
+            for(int j=0;j<yl;j++)
+            {
+                System.out.printf(dir[i][j]+"\t");
+            }
+            System.out.printf("\n");
+        }
+
+
+        return back(xl, yl, cost, dir);
+
+
+    }
+
+
+    public int back(int i, int j, int[][] cost, char[][] dir) {
+        if (i == 0 || j == 0) {
+            return 0;
+        }
+        if (dir[i][j] == 'd') {
+            return 1 + back(i - 1, j - 1, cost, dir);
+        } else if (dir[i][j] == 'u') {
+            return back(i - 1, j, cost, dir);
+        } else {
+            return back(i, j - 1, cost, dir);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        String s1 = "AGCCCTAAGGGCTACCTAGCTT";
+        String s2 = "GACAGCCTACAAGCGTTAGCTTG";
+        char[] x = s1.toCharArray();
+        char[] y = s2.toCharArray();
+
+
+        lcs lcsObj = new lcs();
+        int cal = lcsObj.calculation(x, y);
+        System.out.println("Length of LCS is " + cal);
+    }
+}
